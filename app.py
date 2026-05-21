@@ -11,7 +11,7 @@ st.subheader("โรงแรมแอมเบอร์ 85 (Hotel Amber 85)")
 # 2. โหลดข้อมูล (สมมติว่าไฟล์ชื่อ buffet_data.csv)
 @st.cache_data # ใส่เพื่อช่วยให้เว็บโหลดเร็วขึ้น ไม่ต้องอ่านไฟล์ใหม่ทุกครั้งที่กดปุ่ม
 def load_data():
-    df = pd.read_csv("buffet_data.csv")
+    df = pd.read_csv("2026 Data Test1 Final - Busy Buffet Dataset.xlsx")
     # คุณสามารถเพิ่มโค้ด Clean Data หรือสร้างฟิลด์ใหม่ เช่น Walk-away ตรงนี้ได้เลย
     return df
 
