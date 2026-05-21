@@ -18,7 +18,7 @@ def load_data():
 try:
     df = load_data()
 except:
-    st.warning("⚠️ กรุณาตรวจสอบว่ามีไฟล์ข้อมูล 'buffet_data.csv' อยู่ในโฟลเดอร์แล้ว")
+    st.warning("⚠️ ไม่พบไฟล์ข้อมูล กรุณาตรวจสอบว่าได้ใส่ไฟล์ '2026 Data Test1 Final - Busy Buffet Dataset.xlsx' ไว้ในโฟลเดอร์เดียวกับโค้ดแล้วหรือยัง")
     df = None
 
 if df is not None:
