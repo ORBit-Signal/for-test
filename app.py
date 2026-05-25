@@ -13,7 +13,14 @@ def load_and_clean_data():
     df_list = []
     
     for sheet_name, data in all_sheets.items():
-        data['date'] = sheet_name
+        # แปลงชื่อชีทจากตัวเลข เช่น 133 ให้กลายเป็นข้อความฟอร์แมต "13/3"
+        s_str = str(sheet_name).strip()
+        if len(s_str) >= 2:
+            date_formatted = f"{s_str[:-1]}/{s_str[-1]}" # แยกตัวเลขตัวสุดท้ายออกมาเป็นเดือน
+        else:
+            date_formatted = s_str
+            
+        data['date'] = date_formatted # บันทึกเป็นข้อความแทนตัวเลขดิบ
         df_list.append(data)
         
     df = pd.concat(df_list, ignore_index=True)
@@ -181,8 +188,19 @@ if data_loaded:
         df_wa = df_c_filtered[df_c_filtered['is_walk_away'] == True]
         if not df_wa.empty:
             wa_counts = df_wa.groupby('date').size().reset_index(name='count')
-            fig_wa = px.bar(wa_counts, x='date', y='count', height=CHART_HEIGHT)
-            fig_wa.update_layout(margin=dict(l=10, r=10, t=10, b=10), xaxis_title=None, yaxis_title=None)
+            
+            # เพิ่ม text_auto=True เพื่อโชว์ตัวเลขยอดลูกค้าบนแท่งกราฟ
+            fig_wa = px.bar(wa_counts, x='date', y='count', height=CHART_HEIGHT, text_auto=True)
+            
+            fig_wa.update_layout(
+                margin=dict(l=10, r=10, t=10, b=10), 
+                xaxis_title=None, 
+                yaxis_title=None
+            )
+            
+            # 🌟 ใส่คำสั่งนี้เพื่อบังคับให้แกน X เรียงแท่งติดกันเป็นหมวดหมู่ ไม่เว้นช่องว่างตัวเลข
+            fig_wa.update_xaxes(type='category')
+            
             st.plotly_chart(fig_wa, use_container_width=True)
         else:
             st.info("ไม่มีข้อมูล")
@@ -224,3 +242,35 @@ if data_loaded:
         fig_zone = px.pie(z_counts, names='zone', values='count', hole=0.3, height=CHART_HEIGHT)
         fig_zone.update_layout(margin=dict(l=10, r=10, t=10, b=10), showlegend=False)
         st.plotly_chart(fig_zone, use_container_width=True)
+
+    # ---------------------------------------------------------
+    # ส่วนที่ 3: บทวิเคราะห์พิเศษ (Task 3: Recommended Action)
+    # ---------------------------------------------------------
+    st.markdown("---") # เส้นคั่นแบ่งสัดส่วน
+    st.markdown("<h3 style='text-align: center;'>🎯 ข้อเสนอแนะแนวทางปฏิบัติ (Recommended Action)</h3>", unsafe_allow_html=True)
+    
+    # แบ่ง 2 คอลัมน์ (กราฟ 60% | ข้อความ 40%)
+    t3_col1, t3_col2 = st.columns([1.5, 1])
+    
+    with t3_col1:
+        st.write("📊 **การกระจายตัวของระยะเวลานั่งทานจริง (Meal Time Distribution)**")
+        # ดึงเฉพาะข้อมูลที่มีเวลานั่งทาน
+        df_seated = df_c_filtered[df_c_filtered['meal_time_mins'].notna()]
+        
+        if not df_seated.empty:
+            fig_hist = px.histogram(
+                df_seated, 
+                x="meal_time_mins", 
+                nbins=20,
+                color_discrete_sequence=['#4C78A8']
+            )
+            # ขีดเส้นแดงที่ 90 นาทีเพื่อเป็นเกณฑ์
+            fig_hist.add_vline(x=90, line_dash="dash", line_color="red", annotation_text=" เสนอจำกัดเวลา 90 นาที")
+            fig_hist.update_layout(
+                xaxis_title="ระยะเวลานั่งทาน (นาที)", 
+                yaxis_title="จำนวนกลุ่มลูกค้า",
+                margin=dict(l=10, r=10, t=30, b=10)
+            )
+            st.plotly_chart(fig_hist, use_container_width=True)
+        else:
+            st.info("ไม่มีข้อมูลเวลานั่งทานในเงื่อนไขที่เลือก")
