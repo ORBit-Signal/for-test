@@ -250,7 +250,7 @@ if data_loaded:
     st.markdown("<h3 style='text-align: center;'>🎯 ข้อเสนอแนะแนวทางปฏิบัติ </h3>", unsafe_allow_html=True)
     
     # แบ่ง 2 คอลัมน์ (กราฟ 60% | ข้อความ 40%)
-    t3_col1, t3_col2 = st.columns([1.5, 1])
+    t3_col1, t3_col2 = st.columns([3.7, 0.3])
     
     with t3_col1:
         st.write("📊 **การกระจายตัวของระยะเวลานั่งทานจริง**")
