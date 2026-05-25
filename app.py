@@ -244,16 +244,16 @@ if data_loaded:
         st.plotly_chart(fig_zone, use_container_width=True)
 
     # ---------------------------------------------------------
-    # ส่วนที่ 3: บทวิเคราะห์พิเศษ (Task 3: Recommended Action)
+    # ส่วนที่ 3: บทวิเคราะห์พิเศษ 
     # ---------------------------------------------------------
     st.markdown("---") # เส้นคั่นแบ่งสัดส่วน
-    st.markdown("<h3 style='text-align: center;'>🎯 ข้อเสนอแนะแนวทางปฏิบัติ (Recommended Action)</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center;'>🎯 ข้อเสนอแนะแนวทางปฏิบัติ </h3>", unsafe_allow_html=True)
     
     # แบ่ง 2 คอลัมน์ (กราฟ 60% | ข้อความ 40%)
     t3_col1, t3_col2 = st.columns([1.5, 1])
     
     with t3_col1:
-        st.write("📊 **การกระจายตัวของระยะเวลานั่งทานจริง (Meal Time Distribution)**")
+        st.write("📊 **การกระจายตัวของระยะเวลานั่งทานจริง**")
         # ดึงเฉพาะข้อมูลที่มีเวลานั่งทาน
         df_seated = df_c_filtered[df_c_filtered['meal_time_mins'].notna()]
         
